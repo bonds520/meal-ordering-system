@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司員工訂餐系統 - 管理後台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Arial', sans-serif;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background: #f0f0f0;
+        }
+
+        .menu-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .main-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .main-content h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th {
+            background: #f5f5f5;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .food-type {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .food-meat {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .food-vegetarian {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍱 公司員工訂餐系統</h1>
+            <p>管理後台 - 今日訂單總覽與設定</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>今日訂單數</h3>
+                <div class="value" id="today-orders">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>總補助金額</h3>
+                <div class="value" id="today-subsidy">NT$ 0</div>
+            </div>
+            <div class="stat-card">
+                <h3>員工自付總額</h3>
+                <div class="value" id="today-selfpay">NT$ 0</div>
+            </div>
+            <div class="stat-card">
+                <h3>開放餐廳數</h3>
+                <div class="value" id="restaurant-count">0</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="sidebar">
+                <h2>功能選單</h2>
+                <div class="menu-item active" data-page="dashboard">📊 儀表板</div>
+                <div class="menu-item" data-page="restaurants">🏪 餐廳管理</div>
+                <div class="menu-item" data-page="menu">📋 菜單管理</div>
+                <div class="menu-item" data-page="orders">📝 訂單管理</div>
+                <div class="menu-item" data-page="daily-setting">⚙️ 每日設定</div>
+                <div class="menu-item" data-page="users">👥 員工管理</div>
+                <div class="menu-item" data-page="leave">📅 休假管理</div>
+                <div class="menu-item" data-page="accounting">💰 對帳報表</div>
+            </div>
+
+            <div class="main-content">
+                <h2 id="page-title">儀表板</h2>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="showAddRestaurantModal()">➕ 新增餐廳</button>
+                    <button class="btn btn-success" onclick="showDailySettingModal()">⚙️ 設定今日訂餐</button>
+                </div>
+
+                <div id="main-content-area">
+                    <p style="color: #666; margin-top: 30px;">
+                        歡迎使用訂餐系統管理後台！<br>
+                        系統已準備就緒，請開始設定餐廳和菜單。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 頁面切換
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const page = this.dataset.page;
+                document.getElementById('page-title').textContent = this.textContent.trim().split(' ')[1];
+                
+                // 加載頁面內容
+                loadPageContent(page);
+            });
+        });
+
+        function loadPageContent(page) {
+            const contentArea = document.getElementById('main-content-area');
+            
+            switch(page) {
+                case 'dashboard':
+                    contentArea.innerHTML = '<p style="color: #666;">📊 儀表板頁面開發中...</p>';
+                    break;
+                case 'restaurants':
+                    contentArea.innerHTML = '<p style="color: #666;">🏪 餐廳管理頁面開發中...</p>';
+                    break;
+                case 'menu':
+                    contentArea.innerHTML = '<p style="color: #666;">📋 菜單管理頁面開發中...</p>';
+                    break;
+                case 'orders':
+                    contentArea.innerHTML = '<p style="color: #666;">📝 訂單管理頁面開發中...</p>';
+                    break;
+                case 'daily-setting':
+                    contentArea.innerHTML = '<p style="color: #666;">⚙️ 每日設定頁面開發中...</p>';
+                    break;
+                case 'users':
+                    contentArea.innerHTML = '<p style="color: #666;">👥 員工管理頁面開發中...</p>';
+                    break;
+                case 'leave':
+                    contentcontentArea.innerHTML = '<p style="color: #666;">📅 休假管理頁面開發中...</p>';
+                    break;
+                case 'accounting':
+                    contentArea.innerHTML = '<p style="color: #666;">💰 對帳報表頁面開發中...</p>';
+                    break;
+            }
+        }
+
+        function showAddRestaurantModal() {
+            alert('新增餐廳功能開發中！\n\n目前可透過 API 或後端直接新增。');
+        }
+
+        function showDailySettingModal() {
+            alert('每日設定功能開發中！\n\n目前可透過 API 設定訂餐規則。');
+        }
+
+        // 加載初始資料
+        async function loadInitialData() {
+            try {
+                // 取得今日訂單統計
+                const response = await fetch('/api/order/my');
+                const data = await response.json();
+                
+                document.getElementById('today-orders').textContent = data.length;
+                document.getElementById('today-subsidy').textContent = 'NT$ ' + data.reduce((sum, order) => sum + order.subsidy_amount, 0);
+                document.getElementById('today-selfpay').textContent = 'NT$ ' + data.reduce((sum, order) => sum + order.self_pay_amount, 0);
+                
+                // 取得餐廳數量
+                const restaurantsResponse = await fetch('/api/admin/restaurants');
+                const restaurants = await restaurantsResponse.json();
+                document.getElementById('restaurant-count').textContent = restaurants.length;
+            } catch (error) {
+                console.log('無法加載資料，API 可能尚未啟動');
+            }
+        }
+
+        // 頁面載入後執行
+        window.addEventListener('load', loadInitialData);
+    </script>
+</body>
+</html>

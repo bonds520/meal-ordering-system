@@ -1,0 +1,31 @@
+# 環境變數 (勿上傳)
+.env
+
+# 上傳檔案
+uploads/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+.venv
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系統
+.DS_Store
+Thumbs.db

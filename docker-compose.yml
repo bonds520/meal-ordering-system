@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 資料庫
+  db:
+    image: postgres:15-alpine
+    container_name: meal-ordering-db
+    environment:
+      POSTGRES_DB: meal_ordering
+      POSTGRES_USER: mealorder
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mealorder123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mealorder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI 後端
+  api:
+    build: ./backend
+    container_name: meal-ordering-api
+    environment:
+      DATABASE_URL: postgresql://mealorder:${DB_PASSWORD:-mealorder123}@db:5432/meal_ordering
+      LINE_CHANNEL_ACCESS_TOKEN: ${LINE_CHANNEL_ACCESS_TOKEN}
+      LINE_CHANNEL_SECRET: ${LINE_CHANNEL_SECRET}
+      OLLAMA_BASE_URL: http://ollama:11434
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/backend/app
+      - ./uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "pip install -r requirements.txt && uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  # Ollama 本地 LLM (用於 OCR 和休假表辨識)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: meal-ordering-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: serve
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: meal-ordering-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/web/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  ollama_data:
