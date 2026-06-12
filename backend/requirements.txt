@@ -10,3 +10,4 @@ pydantic==2.5.0
 ollama==0.1.0
 qrcode[pil]==7.4.2
 python-jose==3.3.0
+requests==2.31.0

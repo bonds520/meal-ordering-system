@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 
 from backend.app.models.base import engine, Base
-from backend.app.routes import auth, menu, order, admin, line
+from backend.app.routes import auth, menu, order, admin, line, ocr
 
 # 建立資料庫表格
 def create_tables():
@@ -36,6 +36,7 @@ app.include_router(menu.router, prefix="/api/menu", tags=["菜單"])
 app.include_router(order.router, prefix="/api/order", tags=["訂單"])
 app.include_router(admin.router, prefix="/api/admin", tags=["管理"])
 app.include_router(line.router, prefix="/api/line", tags=["LINE"])
+app.include_router(ocr.router, prefix="/api/ocr", tags=["OCR"])
 
 @app.on_event("startup")
 async def startup_event():
