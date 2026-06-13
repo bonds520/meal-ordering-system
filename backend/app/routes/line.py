@@ -11,13 +11,13 @@ from datetime import datetime, date
 
 from sqlalchemy.orm import Session
 
-from backend.app.database import get_db
-from backend.app.models.user import User
-from backend.app.models.menu_item import MenuItem
-from backend.app.models.order import Order
-from backend.app.models.daily_setting import DailySetting
-from backend.app.models.restaurant import Restaurant
-from backend.app.services.db_service import (
+from app.models.base import get_db
+from app.models.user import User
+from app.models.menu_item import MenuItem
+from app.models.order import Order
+from app.models.daily_setting import DailySetting
+from app.models.restaurant import Restaurant
+from app.services.db_service import (
     UserService,
     MenuItemService,
     OrderService,

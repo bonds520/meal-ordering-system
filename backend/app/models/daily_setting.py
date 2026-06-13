@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Date, Time
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime, time
-from backend.app.models.base import Base
+from app.models.base import Base
 
 class DailySetting(Base):
     __tablename__ = "daily_settings"

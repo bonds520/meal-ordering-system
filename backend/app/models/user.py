@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
-from backend.app.models.base import Base
+from app.models.base import Base
 import enum
 
 class UserStatus(enum.Enum):

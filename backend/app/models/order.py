@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float, Date, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime, date
-from backend.app.models.base import Base
+from app.models.base import Base
 import enum
 
 class OrderStatus(enum.Enum):

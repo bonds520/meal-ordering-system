@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
-from backend.app.models.base import Base
+from app.models.base import Base
 
 class Restaurant(Base):
     __tablename__ = "restaurants"

@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
 
-from backend.app.models.base import engine, Base
-from backend.app.routes import auth, menu, order, admin, line, ocr
+from app.models.base import engine, Base
+from app.routes import auth, menu, order, admin, line, ocr
 
 # 建立資料庫表格
 def create_tables():
@@ -30,6 +30,10 @@ app.add_middleware(
 if os.path.exists("frontend/web/dist"):
     app.mount("/static", StaticFiles(directory="frontend/web/dist"), name="static")
 
+# 掛載管理員後台
+if os.path.exists("frontend/admin"):
+    app.mount("/admin", StaticFiles(directory="frontend/admin", html=True), name="admin")
+
 # 註冊路由
 app.include_router(auth.router, prefix="/api/auth", tags=["認證"])
 app.include_router(menu.router, prefix="/api/menu", tags=["菜單"])
@@ -41,8 +45,13 @@ app.include_router(ocr.router, prefix="/api/ocr", tags=["OCR"])
 @app.on_event("startup")
 async def startup_event():
     """啟動時建立資料庫表格"""
-    create_tables()
-    print("✅ 資料庫表格已建立")
+    try:
+        create_tables()
+        print("✅ 資料庫表格已建立")
+    except Exception as e:
+        print(f"⚠️  資料庫連接失敗：{e}")
+        print("📝 請先啟動 PostgreSQL 資料庫")
+        print("💡 測試模式：API 端點仍可訪問，但資料庫操作會失敗")
 
 @app.get("/")
 async def root():

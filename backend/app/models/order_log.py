@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from datetime import datetime
-from backend.app.models.base import Base
+from app.models.base import Base
 import enum
 
 class LogType(enum.Enum):

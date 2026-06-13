@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend.app.models.base import get_db
-from backend.app.models.order import Order
-from backend.app.models.user import User
-from backend.app.models.menu_item import MenuItem
-from backend.app.models.daily_setting import DailySetting
+from app.models.base import get_db
+from app.models.order import Order
+from app.models.user import User
+from app.models.menu_item import MenuItem
+from app.models.daily_setting import DailySetting
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date

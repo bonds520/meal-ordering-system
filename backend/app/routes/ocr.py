@@ -14,17 +14,17 @@ from datetime import datetime
 
 from sqlalchemy.orm import Session
 
-from backend.app.database import get_db
-from backend.app.services.ocr_service import OCRService, ocr_service
-from backend.app.services.db_service import MenuItemService, RestaurantService
-from backend.app.models.menu_item import MenuItem
-from backend.app.models.restaurant import Restaurant
+from app.models.base import get_db
+from app.services.ocr_service import OCRService, ocr_service
+from app.services.db_service import MenuItemService, RestaurantService
+from app.models.menu_item import MenuItem
+from app.models.restaurant import Restaurant
 
 router = APIRouter()
 security = HTTPBearer()
 
 # 上傳目錄
-UPLOAD_DIR = "/app/uploads"
+UPLOAD_DIR = "/tmp/uploads"
 MENU_UPLOAD_DIR = os.path.join(UPLOAD_DIR, "menus")
 
 # 確保目錄存在

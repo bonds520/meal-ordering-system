@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from backend.app.models.base import get_db
-from backend.app.models.menu_item import MenuItem
-from backend.app.models.restaurant import Restaurant
-from backend.app.models.daily_setting import DailySetting
+from app.models.base import get_db
+from app.models.menu_item import MenuItem
+from app.models.restaurant import Restaurant
+from app.models.daily_setting import DailySetting
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date

@@ -25,12 +25,14 @@ services:
     build: ./backend
     container_name: meal-ordering-api
     environment:
-      DATABASE_URL: postgresql://mealorder:${DB_PASSWORD:-mealorder123}@db:5432/meal_ordering
+      DATABASE_URL: postgresql://mealorder:***@db:5432/meal_ordering
       LINE_CHANNEL_ACCESS_TOKEN: ${LINE_CHANNEL_ACCESS_TOKEN}
       LINE_CHANNEL_SECRET: ${LINE_CHANNEL_SECRET}
-      OLLAMA_BASE_URL: http://ollama:11434
+      USE_VLLM: "true"
+      VLLM_BASE_URL: http://host.docker.internal:8000
+      VLLM_MODEL: QuantTrio/Qwen3.5-27B-AWQ
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - ./backend/app:/app/backend/app
       - ./uploads:/app/uploads

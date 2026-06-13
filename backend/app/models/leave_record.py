@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Date, ForeignKey, Float
 from datetime import datetime, date
-from backend.app.models.base import Base
+from app.models.base import Base
 import enum
 
 class LeaveType(enum.Enum):

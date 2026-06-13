@@ -14,14 +14,14 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 from datetime import datetime, date, time
 
-from backend.app.database import Base, get_db, DATABASE_URL
-from backend.app.models.user import User, UserStatus
-from backend.app.models.restaurant import Restaurant
-from backend.app.models.menu_item import MenuItem
-from backend.app.models.order import Order
-from backend.app.models.daily_setting import DailySetting
-from backend.app.models.leave_record import LeaveRecord
-from backend.app.models.order_log import OrderLog
+from app.database import Base, get_db, DATABASE_URL
+from app.models.user import User, UserStatus
+from app.models.restaurant import Restaurant
+from app.models.menu_item import MenuItem
+from app.models.order import Order
+from app.models.daily_setting import DailySetting
+from app.models.leave_record import LeaveRecord
+from app.models.order_log import OrderLog
 
 # 建立資料庫引擎
 engine = create_engine(DATABASE_URL, echo=True)
